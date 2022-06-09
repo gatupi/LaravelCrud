@@ -1,0 +1,1 @@
+drop procedure if exists select_customers;

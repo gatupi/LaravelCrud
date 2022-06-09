@@ -23,17 +23,16 @@ form.cmsform {
 }
 
 
-.cms-textinput {
+.cms-label-input-box {
     position: relative;
     display: flex;
     flex-direction: column-reverse;
     /* background: lightseagreen; */
-    width: 250px;
     border-radius: 5px;
-    margin: 0 auto 10px;
+    margin: 0;
 }
 
-.cms-textinput input {
+.cms-label-input-box input {
     border-radius: 5px;
     border: 1px solid #555;
     padding: 3px;
@@ -41,11 +40,11 @@ form.cmsform {
     margin: 0;
 }
 
-.cms-textinput input:focus {
+.cms-label-input-box input:focus {
     outline: none;
 }
 
-.cms-textinput label {
+.cms-label-input-box label {
     margin-left: 4px;
     margin-bottom: 1px;
 }

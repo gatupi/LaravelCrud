@@ -3,215 +3,70 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-class Customer {
-    private string $firstName;
-    private ?string $middleName;
-    private string $lastName;
-    private DateOnly $dateOfBirth;
-    private ?string $sex;
-    private string $fullName;
-    private int $age;
-    private int $id;
-
-    public function __construct(int $id, string $fname, ?string $mname, string $lname, DateOnly $dateOfBirth, string $sex) {
-        $this->id = $id;
-        $this->setFirstName($fname);
-        $this->setMiddleName($mname);
-        $this->setLastName($lname);
-        $this->setDateOfBirth($dateOfBirth);
-        $this->setSex($sex);
-        $this->setFullName();
-        $this->setAge();
-    }
-
-    private function setFirstName(string $fname) {
-        $this->firstName = $fname;
-    }
-
-    private function setMiddleName(?string $mname) {
-        $this->middleName = $mname;
-    }
-
-    private function setLastName(string $lname) {
-        $this->lastName = $lname;
-    }
-
-    private function setDateOfBirth(DateOnly $dob) {
-        $this->dateOfBirth = $dob;
-    }
-
-    private function setFullName() {
-        $this->fullName = $this->firstName . ' ' . (isset($this->middleName) ? $this->middleName . ' ' : '') . $this->lastName;
-    }
-
-    private function setAge() {
-        $now = date('Y/m/d');
-        $parts = explode('/', $now);
-        $dob = $this->dateOfBirth;
-        $yearDiff = (int)$parts[0] - $dob->getYear();
-        $monthDiff = (int)$parts[1] - $dob->getMonth();
-        $dayDiff = (int)$parts[2] - $dob->getDay();
-        $this->age = $yearDiff - ($monthDiff < 0 || ($monthDiff == 0 && $dayDiff < 0) ? 1 : 0);
-    }
-
-    public function getAge() {
-        return $this->age;
-    }
-
-    public function getDateOfBirth() {
-        return $this->dateOfBirth;
-    }
-
-    private function setSex(string $sex) {
-        $sex = strtolower($sex);
-        $this->sex = $sex != 'm' && $sex != 'f' ? null : $sex;
-    }
-
-    public function getFullName(): string {
-        return $this->fullName;
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getSex() {
-        return $this->sex;
-    }
-
-    public function getFirstName() {
-        return $this->firstName;
-    }
-
-    public function getMiddleName() {
-        return $this->middleName;
-    }
-
-    public function getLastName() {
-        return $this->lastName;
-    }
-
-    public function __toString(): string {
-        return "Customer\n  Id: $this->id\n  Name: $this->fullName\n  Date of birth: $this->dateOfBirth\n  Age: $this->age yo\n  Sex: " . strtoupper($this->sex) . "\n";
-    }
-}
-
-class DateOnly {
-    private int $day;
-    private int $month;
-    private int $year;
-
-    public function __construct(int $year, int $month, int $day) {
-        $this->setYear($year);
-        $this->setMonth($month);
-        $this->setDay($day);
-    }
-
-    public static function buildByString(string $dateStr): ?DateOnly {
-        $pattern = '/^[0-9]{1,4}\/[0-9]{1,2}\/[0-9]{1,2}$/';
-        echo $pattern . "\n";
-        if (preg_match($pattern, $dateStr)) {
-            $parts = explode('/', $dateStr);
-            return new DateOnly($parts[0], $parts[1], $parts[2]);
-        }
-        echo "invalid!\n";
-        return null;
-    }
-
-    private function setDay(int $day): void {
-        $m30 = [4, 6, 9, 11];
-        $max = 31;
-        if ($this->month == 2)
-            $max = $this->isLeapYear() ? 29 : 28;
-        else if (in_array($this->month, $m30))
-            $max = 30;
-        $this->day = $day < 1 ? 1 : ($day > $max ? $max : $day);
-    }
-
-    private function setMonth(int $month): void {
-        $this->month = $month < 1 ? 1 : ($month > 12 ? 12 : $month);
-    }
-
-    private function setYear(int $year): void {
-        $this->year = $year < 1 ? 1 : ($year > 9999 ? 9999 : $year);
-    }
-
-    public function isLeapYear(): bool {
-        return $this->year % 100 == 0 ? $this->year % 400 == 0 : $this->year % 4 == 0;
-    }
-
-    public function __toString(): string {
-        return $this->toString();
-    }
-
-    public function getDay(): int {
-        return $this->day;
-    }
-
-    public function getMonth(): int {
-        return $this->month;
-    }
-
-    public function getYear(): int {
-        return $this->year;
-    }
-
-    public function toString(string $format = "dd/MM/yyyy"): string {
-
-        switch($format){
-            default:
-            case "dd/MM/yyyy":
-                return str_pad($this->day, 2, '0', STR_PAD_LEFT) . '/' . str_pad($this->month, 2, '0', STR_PAD_LEFT) . '/' . str_pad($this->year, 4, '0', STR_PAD_LEFT);
-            case "MM/dd/yyyy":
-                return str_pad($this->month, 2, '0', STR_PAD_LEFT) . '/' . str_pad( $this->day, 2,'0', STR_PAD_LEFT) . '/' . str_pad($this->year, 4, '0', STR_PAD_LEFT);
-            case "yyyy/MM/dd":
-                return str_pad($this->year, 4, '0', STR_PAD_LEFT) . '/' . str_pad($this->month, 2, '0', STR_PAD_LEFT) . '/' . str_pad($this->day, 2, '0', STR_PAD_LEFT);
-            case "d/M/y":
-                return $this->day . '/' . $this->month . '/' . $this->year;
-            case "M/d/y":
-                return $this->month . '/' . $this->day . '/' . $this->year;
-            case "y/M/d":
-                return $this->year . '/' . $this->month . '/' . $this->day;
-        }
-    }
-}
+use App\Models\Customer;
+use Illuminate\Support\Facades\DB;
+use App\Models\Filters\CustomerListFilter;
 
 class CustomerController extends Controller
 {
-    public function __construct(){
-
-        $clientes_mock = [
-            new Customer(1, 'Gabriel', 'Willian', 'Alonso', new DateOnly(1997,12,8), 'm'),
-            new Customer(2, 'Mariana', null, 'Malaguti', new DateOnly(2002,5,30), 'f'),
-            new Customer(3, 'Aline', null, 'Capocci', new DateOnly(1980,5,18), 'f'),
-            new Customer(4, 'Raphael', 'Vinicios', 'Alonso', new DateOnly(1999,3,28), 'm') 
-        ];
-
-        $clientes = session('customers'); // não é a propriedade da classe (é local)
-        if (!isset($clientes))
-            session(["customers" => $clientes_mock]);
-    }
-
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        // $view = '<ol>';
-        // $count = 0;
-        // foreach($this->clientes as $cliente){
-        //     $view .= "<li>" . $cliente['nome'] .  " (id: " . $cliente['id'] . ")</li>";
-        // }
-        // $view .= '</ol>';
-        // return $view;
+        $order = buildOrderBy('1:d,0', ['full_name', 'date_of_birth', 'id']);
+        $filters = (new CustomerListFilter($request))->toArray();
 
-        $title = "Clientes";
-        $customers = session("customers");
-        return view('customers.index', compact('customers', 'title'));
+        $query = DB::table('customer_list_view as c')
+            ->select(DB::raw("row_number() over (" . $order . ") as n, c.*"))
+            ->whereRaw("
+            (? is null or year(date_of_birth) = ?)
+            and (? is null or month(date_of_birth) = ?)
+            and (? is null or day(date_of_birth) = ?)
+            and (? is null or sex = ?)
+            and (? is null or active = ?)
+            and (? is null or full_name like ?)
+            and (? is null or age >= ?)
+            and (? is null or age <= ?)
+        ", [
+                $filters['birth_year'], $filters['birth_year'], $filters['birth_month'], $filters['birth_month'],
+                $filters['birth_day'], $filters['birth_day'], $filters['sex'], $filters['sex'],
+                $filters['active'], $filters['active'],
+                $filters['name'], $filters['name'], $filters['age_min'], $filters['age_min'],
+                $filters['age_max'], $filters['age_max']
+            ]);
+
+        $count = $query->count();
+
+        $perPage = 15;
+        $perPage = $perPage < 15 ? 15 : ($perPage > 20 ? 20 : $perPage);
+        $maxPages = intdiv($count, $perPage) + ($count % $perPage != 0);
+        $page = 1;
+        $page = $page < 1 ? 1 : ($page > $maxPages ? $maxPages : $page);
+
+        $list = DB::query()->fromSub($query, 'q')->whereBetween('n', [($page - 1) * $perPage + 1, $page * $perPage])->orderBy('n')->get();
+
+        $list = $list->map(function ($element) {
+            return (array)$element;
+        });
+        $meta = [
+            'columns' => [
+                'keys' => ['n', 'id', 'full_name', 'cpf', 'age', 'date_of_birth', 'sex', 'active'],
+                'pt-br' => ['#', 'Id', 'Nome', 'CPF', 'Idade', 'Nascimento', 'Sexo', 'Ativo'],
+                'en-us' => ['#', 'Id', 'Name', 'CPF', 'Age', 'Date of birth', 'Sex', 'Active']
+            ],
+            'title' => ['pt-br' => 'Clientes', 'en-us' => 'Customers'],
+            'routes' => [
+                'edit' => 'customer.edit',
+                'destroy' => 'customer.destroy',
+                'show' => 'customer.show'
+            ],
+            'lang' => 'pt-br'
+        ];
+        return view('customers.index', compact('list', 'meta', 'maxPages', 'page', 'request'));
     }
 
     /**
@@ -222,12 +77,13 @@ class CustomerController extends Controller
     public function create()
     {
         return view('customers.create', [
-            'fname'=>null,
-            'mname'=>null,
-            'lname'=>null,
-            'dob'=>'yyyy/MM/dd',
-            'sex'=>null,
-            'update'=>false
+            'first_name' => null,
+            'middle_name' => null,
+            'last_name' => null,
+            'date_of_birth' => 'yyyy/MM/dd',
+            'sex' => null,
+            'update' => false,
+            'cpf' => null
         ]);
     }
 
@@ -239,19 +95,21 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $clientes = session('customers');
-        $count = count($clientes);
-        $newId = $count == 0 ? 1 : end($clientes)->getId() + 1;
-        $newCustomer = new Customer(
-            $newId,
-            $request->fname,
-            $request->mname,
-            $request->lname,
-            DateOnly::buildByString($request->dob),
-            $request->sex
-        );
-        $clientes[] = $newCustomer;
-        session(['customers' => $clientes]);
+        $customer = new Customer();
+
+        try {
+            $customer->cpf = $request->cpf;
+            $customer->first_name = $request->first_name;
+            $customer->middle_name = $request->middle_name;
+            $customer->last_name = $request->last_name;
+            $customer->sex = $request->sex;
+            $customer->active = true;
+            $customer->date_of_birth = $request->date_of_birth;
+            $customer->save();
+        } catch (\Throwable $e) {
+            return "<h1>Oops... Houve um problema com o cadastro :(<br>Aqui está a mensagem: \"" . $e->getMessage() . "\"</h1>";
+        }
+
         return redirect()->route('customer.index');
     }
 
@@ -264,13 +122,20 @@ class CustomerController extends Controller
     public function show($id)
     {
         //
-        $customers = session('customers');
-        $c = $customers[$this->getIndex($id, $customers)];
-        if (!isset($c))
-            return "<h2>Customer not found.</h2>";
-        //return "<h2>Id: " . $customer['id'] . ", Nome: " . $customer['nome'] . "</h2>";
+        $customer = Customer::find($id);
+        $attributes = [
+            'id'            => ['pt-br' => 'Id',                'en-us' => 'Id'],
+            'full_name'     => ['pt-br' => 'Nome completo',     'en-us' => 'Full name'],
+            'age'           => ['pt-br' => 'Idade',             'en-us' => 'Age'],
+            'formatted_cpf' => ['pt-br' => 'CPF',               'en-us' => 'BR CPF'],
+            'date_of_birth' => ['pt-br' => 'Nascimento',        'en-us' => 'Date of birth'],
+            'sex'           => ['pt-br' => 'Sexo',              'en-us' => 'Sex'],
+            'created_at'    => ['pt-br' => 'Data cadastro',     'en-us' => 'Register date'],
+            'active'        => ['pt-br' => 'Ativo',             'en-us' => 'Active']
+        ];
+        $lang = 'pt-br';
 
-        return view('customers.info', compact('c'));
+        return view('customers.info', compact('customer', 'attributes', 'lang'));
     }
 
     /**
@@ -282,17 +147,20 @@ class CustomerController extends Controller
     public function edit($id)
     {
         //
-        $customers = session('customers');
-        $index = $this->getIndex($id, $customers);
-        $customer = $customers[$index];
-        return view('customers.edit', [
-            'id'=>$customer->getId(),
-            'fname'=>$customer->getFirstName(),
-            'mname'=>$customer->getMiddleName(),
-            'lname'=>$customer->getLastName(),
-            'dob'=>$customer->getDateOfBirth()->toString("yyyy/MM/dd"),
-            'sex'=>$customer->getSex(),
-            'update'=>true
+        $customer = Customer::find($id);
+
+        $date_parts = explode('-', $customer['date_of_birth']);
+        $date_of_birth = $date_parts[2] . '/' . $date_parts[1] . '/' . $date_parts[0];
+
+        return view('customers.create', [
+            'update' => true,
+            'id' => $id,
+            'cpf' => $customer['cpf'],
+            'first_name' => $customer['first_name'],
+            'middle_name' => $customer['middle_name'],
+            'last_name' => $customer['last_name'],
+            'date_of_birth' => $date_of_birth,
+            'sex' => $customer['sex']
         ]);
     }
 
@@ -306,38 +174,21 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $clientes = session('customers');
-        $index = $this->getIndex($id, $clientes);
-        $clientes[$index] = $this->getCustomerByRequest($request, $id);
-        session(['customers'=>$clientes]);
+        $customer = Customer::find($id);
+        try {
+            $customer->cpf = $request->cpf;
+            $customer->first_name = $request->first_name;
+            $customer->middle_name = $request->middle_name;
+            $customer->last_name = $request->last_name;
+            $customer->sex = $request->sex;
+            $customer->active = true;
+            $customer->date_of_birth = $request->date_of_birth;
+            $customer->update();
+        } catch (\Throwable $e) {
+            return "<h1>Oops... Houve um problema com o cadastro :(<br>Aqui está a mensagem: \"" . $e->getMessage() . "\"</h1>";
+        }
         return redirect()->route('customer.index');
     }
-
-    private function getCustomerByRequest(Request $request, $id) {
-        return new Customer(
-            $id,
-            $request->fname,
-            $request->mname,
-            $request->lname,
-            DateOnly::buildByString($request->dob),
-            $request->sex
-        );
-    }
-
-    private function getIndex(int $id, array $customers): ?int {
-        // // array example
-        // $ids = array_column($customers, 'id');
-        // $index = array_search($id, $ids);
-
-        $index = 0;
-        foreach($customers as $c) {
-            if ($c->getId() == $id)
-                return $index;
-            $index++;
-        }
-        return null;
-    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -347,10 +198,12 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         //
-        $customers = session('customers');
-        $index = $this->getIndex($id, $customers);
-        array_splice($customers, $index, 1);
-        session(['customers'=>$customers]);
-        return redirect()->route("customer.index");
+        try {
+            $customer = Customer::find($id);
+            $customer->delete();
+        } catch (\Throwable $e) {
+            return "Error: " . $e->getMessage();
+        }
+        return redirect()->route('customer.index');
     }
 }
