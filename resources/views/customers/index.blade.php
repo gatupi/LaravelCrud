@@ -1,7 +1,11 @@
 @extends('layouts.main')
 @section('content')
-<h2 class="list-title">{{$title}}</h2>
-<a href="{{route('customer.create')}}">Novo</a> <!-- redireciona pro formulario -->
+<div class="title-row">
+    <span class="title list-title">{{$title}}</span>
+    <a href="{{route('customer.create')}}">
+        <img class="add-icon" src="{{asset('img/add-icon-6-blue.png')}}" alt="add icon">
+    </a> <!-- redireciona pro formulario -->
+</div>
 @if(count($customers) > 0)
     {{-- <ul>
         @foreach ($customers as $c)

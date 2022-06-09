@@ -6,7 +6,9 @@
     <input type="text" id="User" name="nome">
     <input type="submit" value="Save">
 </form> --}}
-<h2 class="form-title">Cadastrar cliente</h2>
+<div class="title-row">
+    <span class="title list-title">Cadastro de cliente</span>
+</div>
 <form class="cmsform" action="{{$update ? route('customer.update', $id) : route('customer.store')}}" method="POST">
     @csrf
     @if($update)
