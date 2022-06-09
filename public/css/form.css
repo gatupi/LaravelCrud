@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-title {
+    margin: 30px auto 0;
+    text-align: center;
+    font-size: 20pt;
+}
+
+form.cmsform {
+    background-color: rgb(180, 224, 240);
+    width: 400px;
+    margin: 30px auto;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 5px 10px 10px #aaa;
+}
+
+.cms-formrow {
+    border-radius: 10px;
+}
+
+
+.cms-textinput {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    /* background: lightseagreen; */
+    width: 250px;
+    border-radius: 5px;
+    margin: 0 auto 10px;
+}
+
+.cms-textinput input {
+    border-radius: 5px;
+    border: 1px solid #555;
+    padding: 3px;
+    font-size: 12pt;
+    margin: 0;
+}
+
+.cms-textinput input:focus {
+    outline: none;
+}
+
+.cms-textinput label {
+    margin-left: 4px;
+    margin-bottom: 1px;
+}
+
+.cms-radioinput {
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    margin: 0 auto;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.cms-radioinput .title {
+    /* background-color: blue; */
+    text-align: center;
+    padding: 2px;
+}
+
+.cms-radioption {
+    display: flex;
+    flex-direction: row-reverse;
+    /* background: lightslategrey; */
+    padding-bottom: 2px;
+}
+
+.cms-radioption label {
+    margin-right: 3px;
+}
+
+.cms-options {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.cms-radioinput input {
+    position: relative;
+    transform: translate(0%, -50%);
+    top: 50%;
+}
+
+.options-row {
+    /* background-color: lightcoral; */
+    margin: 30px auto 0;
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cms-formbutton {
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 3px 6px;
+    text-decoration: none;
+    color: black;
+    background-color: #f5f5f5;
+}
+
+.cms-formbutton:hover {
+    cursor: pointer;
+}
+
+.cms-formbutton.cancel {
+    background-color: rgb(247, 185, 185);
+}
+
+.cms-formbutton.ok {
+    background-color: rgb(155,219,198);
+}

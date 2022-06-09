@@ -1,0 +1,56 @@
+.cms-usrprofile {
+    width: 500px;
+    height: 400px;
+    background-color: #f5f5f5;
+    border-radius: 30px;
+    margin: 30px auto 0;
+    box-shadow: 0 0 10px #aaa;
+    padding: 30px;
+}
+
+.cms-usrphoto {
+    height: 100px;
+    padding-right: 10px;
+    margin-right: 10px;
+    border-right: 1px solid #aaa;
+}
+
+.cms-profileheader {
+    /* background-color: rgb(155,219,198); */
+    padding: 10px;
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+    display: flex;
+}
+
+.name-section {
+    /* background-color: lightcoral; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.usr-fullname {
+    font-size: 16pt;
+    font-weight: bolder;
+}
+
+.usr-age {
+    display: block;
+    font-weight:unset;
+    font-size: 14pt;
+}
+
+.cms-profilebody {
+    /* background-color: rgb(155,219,198); */
+    padding: 10px;
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+    margin-top: 5px;
+}
+
+.cms-profilekey {
+    color: rgb(35, 35, 156);
+}
