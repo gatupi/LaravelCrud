@@ -3,7 +3,7 @@
 <div class="title-row">
     <span class="title list-title">Perfil do cliente</span>
 </div>
-<div>
+<div class="content-area">
     <div class="cms-usrprofile">
         <div class="cms-profileheader">
             <img class="cms-usrphoto" src="{{asset('img/user-profile-icon.png')}}" alt="user photo">

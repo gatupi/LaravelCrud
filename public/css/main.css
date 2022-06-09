@@ -160,3 +160,8 @@ h2.list-title {
 a {
     text-decoration: none;
 }
+
+.cms-content {
+    position: relative;
+    overflow: auto;
+}
