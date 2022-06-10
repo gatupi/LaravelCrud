@@ -1,8 +1,6 @@
 @extends('layouts.main')
 @section('content')
-<div class="title-row">
-    <span class="title list-title">Perfil do cliente</span>
-</div>
+@section('title', 'Perfil do cliente')
 <div class="content-area">
     <div class="cms-usrprofile">
         <div class="cms-profileheader">

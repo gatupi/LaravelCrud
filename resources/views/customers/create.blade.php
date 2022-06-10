@@ -1,14 +1,6 @@
 @extends('layouts.main')
 @section('content')
-{{-- <form action="{{ route('customer.store') }}" method="{{ 'POST' }}">
-    @csrf
-    <label for="User">Nome</label>
-    <input type="text" id="User" name="nome">
-    <input type="submit" value="Save">
-</form> --}}
-<div class="title-row">
-    <span class="title list-title">Cadastro de cliente</span>
-</div>
+@section('title', 'Cadastro de cliente')
 <form class="cmsform" action="{{$update ? route('customer.update', $id) : route('customer.store')}}" method="POST">
     @csrf
     @if($update)

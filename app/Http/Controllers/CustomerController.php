@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class Customer {
+interface IObjectArray {
+    public function toArray(): array;
+}
+
+class Customer implements IObjectArray {
     private string $firstName;
     private ?string $middleName;
     private string $lastName;
@@ -94,6 +98,16 @@ class Customer {
 
     public function __toString(): string {
         return "Customer\n  Id: $this->id\n  Name: $this->fullName\n  Date of birth: $this->dateOfBirth\n  Age: $this->age yo\n  Sex: " . strtoupper($this->sex) . "\n";
+    }
+
+    public function toArray(): array {
+        return [
+            'fullName'=>$this->getFullName(),
+            'id'=>$this->id,
+            'dateOfBirth'=>$this->dateOfBirth->__toString(),
+            'age'=>$this->getAge(),
+            'sex'=>$this->sex
+        ];
     }
 }
 
@@ -210,8 +224,20 @@ class CustomerController extends Controller
         // return $view;
 
         $title = "Clientes";
-        $customers = session("customers");
-        return view('customers.index', compact('customers', 'title'));
+        $clientes = session("customers");
+        $customers = [];
+        foreach($clientes as $c) {
+            $customers[] = $c->toArray();
+        }
+        $meta = [
+            'id'=>['pt-br'=>'Id', 'en-us'=>'Id'],
+            'fullName'=>['pt-br'=>'Nome', 'en-us'=>'Name'],
+            'age'=>['pt-br'=>'Idade', 'en-us'=>'Age'],
+            'sex'=>['pt-br'=>'Sexo', 'en-us'=>'Sex'],
+            'dateOfBirth'=>['pt-br'=>'Nascimento', 'en-us'=>'Date of birth'],
+        ];
+        $route = ['show'=>'customer.show', 'edit'=>'customer.edit', 'destroy'=>'customer.destroy'];
+        return view('customers.index', compact('customers', 'title', 'meta', 'route'));
     }
 
     /**

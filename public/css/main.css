@@ -35,7 +35,7 @@ header {
 .cms-body {
     position: relative;
     display: flex;
-    height: 90vh;
+    height: 100vh;
     /* background-color: black; */
 }
 
@@ -81,6 +81,11 @@ table.list thead tr:nth-child(1) {
 
 table.list thead th, table.list tbody td {
     border-right: 1px solid #aaa;
+}
+
+table.list thead th {
+    border-right-color: #555;
+    border-bottom: 1.5px solid #555;
 }
 
 table.list thead th:last-child, table.list tbody td:last-child {
@@ -164,4 +169,8 @@ a {
 .cms-content {
     position: relative;
     overflow: auto;
+}
+
+.main-menu .active {
+    background-color: rgb(55, 134, 108);
 }
