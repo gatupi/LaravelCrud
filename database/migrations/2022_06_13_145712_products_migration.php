@@ -28,17 +28,16 @@ class ProductsMigration extends Migration
             $table->timestamps();
         });
 
-        Schema::create('product_sales', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->unsignedInteger('quantity');
+        Schema::create('product_sale', function (Blueprint $table) {
             $table->unsignedBigInteger('sale_id');
+            $table->unsignedBigInteger('product_id');          
+            $table->unsignedInteger('quantity');    
+            $table->primary(['sale_id', 'product_id']);        
+
+            $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('sale_id')->references('id')->on('sales');
 
             $table->unique(['product_id', 'sale_id']); // único produto por venda
-
-            $table->timestamps();
         });
     }
 
@@ -50,7 +49,7 @@ class ProductsMigration extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('product_sales');
+        Schema::dropIfExists('product_sale');
         Schema::dropIfExists('sales');
         Schema::dropIfExists('products');
     }
