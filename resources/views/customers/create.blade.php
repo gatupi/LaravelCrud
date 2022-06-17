@@ -7,20 +7,24 @@
     @method('PUT')
     @endif
     <div class="cms-textinput">
-        <input type="text" id="fname" name="fname" value="{{$fname}}">
-        <label for="fname">First name</label>
+        <input type="text" id="cpf" name="cpf" value={{$cpf}}>
+        <label for="cpf">CPF</label>
     </div>
     <div class="cms-textinput">
-        <input type="text" id="mname" name="mname" value="{{$mname}}">
-        <label for="mname">Middle name</label>
+        <input type="text" id="first_name" name="first_name" value={{$first_name}}>
+        <label for="first_name">First name</label>
     </div>
     <div class="cms-textinput">
-        <input type="text" id="lname" name="lname" value="{{$lname}}">
-        <label for="lname">Last name</label>
+        <input type="text" id="middle_name" name="middle_name" value={{$middle_name}}>
+        <label for="middle_name">Middle name</label>
     </div>
     <div class="cms-textinput">
-        <input type="text" id="dob" name="dob" value="{{$dob}}">
-        <label for="dob">Date of birth</label>
+        <input type="text" id="last_name" name="last_name" value={{$last_name}}>
+        <label for="last_name">Last name</label>
+    </div>
+    <div class="cms-textinput">
+        <input type="text" id="date_of_birth" name="date_of_birth" value={{$date_of_birth}}>
+        <label for="date_of_birth">Date of birth</label>
     </div>
     <div class="cms-radioinput">
         <span class="title">Sex</span>

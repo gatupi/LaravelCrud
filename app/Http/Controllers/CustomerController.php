@@ -5,21 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\Classes\DateOnly;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
     public function __construct(){
-
-        $clientes_mock = [
-            new Customer(1, 'Gabriel', 'Willian', 'Alonso', new DateOnly(1997,12,8), 'm'),
-            new Customer(2, 'Mariana', null, 'Malaguti', new DateOnly(2002,5,30), 'f'),
-            new Customer(3, 'Aline', null, 'Capocci', new DateOnly(1980,5,18), 'f'),
-            new Customer(4, 'Raphael', 'Vinicios', 'Alonso', new DateOnly(1999,3,28), 'm') 
-        ];
-
-        $clientes = session('customers'); // não é a propriedade da classe (é local)
-        if (!isset($clientes))
-            session(["customers" => $clientes_mock]);
+        
+        $customers = Customer::all();
+        if (empty($customers)) {
+            $customers = [
+                ['first_name'=>'Gabriel', 'middle_name'=>'Willian', 'last_name'=>'Alonso', 'sex'=>'m', 'cpf'=>'12312312311', 'date_of_birth'=>'1997-12-08'],
+                ['first_name'=>'Mariana', 'middle_name'=>null, 'last_name'=>'Malaguti', 'sex'=>'f', 'cpf'=>'12312312312', 'date_of_birth'=>'2002-05-30'],
+                ['first_name'=>'Aline', 'middle_name'=>null, 'last_name'=>'Capocci', 'sex'=>'f', 'cpf'=>'12312312313', 'date_of_birth'=>'1980-05-18']
+            ];
+            foreach($customers as $c) {
+                Customer::create($c);
+            }
+        }
     }
 
     /**
@@ -29,30 +31,25 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
-        // $view = '<ol>';
-        // $count = 0;
-        // foreach($this->clientes as $cliente){
-        //     $view .= "<li>" . $cliente['nome'] .  " (id: " . $cliente['id'] . ")</li>";
-        // }
-        // $view .= '</ol>';
-        // return $view;
-
-        $title = "Clientes";
-        $clientes = session("customers");
-        $customers = [];
-        foreach($clientes as $c) {
-            $customers[] = $c->toArray();
-        }
+        $list = DB::select('call select_customers(?,?,?,?,?,?,?,?)', [null,null,null,null,null,null,null,null]);
+        $list = array_map(function($element) {
+            return (array)$element;
+        }, $list);
         $meta = [
-            'id'=>['pt-br'=>'Id', 'en-us'=>'Id'],
-            'fullName'=>['pt-br'=>'Nome', 'en-us'=>'Name'],
-            'age'=>['pt-br'=>'Idade', 'en-us'=>'Age'],
-            'sex'=>['pt-br'=>'Sexo', 'en-us'=>'Sex'],
-            'dateOfBirth'=>['pt-br'=>'Nascimento', 'en-us'=>'Date of birth'],
+            'columns'=>[
+                'keys'=>['id', 'full_name', 'cpf', 'age', 'date_of_birth', 'sex', 'active'],
+                'pt-br'=>['Id', 'Nome', 'CPF', 'Idade', 'Nascimento', 'Sexo', 'Ativo'],
+                'en-us'=>['Id', 'Name', 'CPF', 'Age', 'Date of birth', 'Sex', 'Active']
+            ],
+            'title'=>['pt-br'=>'Clientes', 'en-us'=>'Customers'],
+            'routes'=>[
+                'edit'=>'customer.edit',
+                'destroy'=>'customer.destroy',
+                'show'=>'customer.show'
+            ],
+            'lang'=>'pt-br'
         ];
-        $route = ['show'=>'customer.show', 'edit'=>'customer.edit', 'destroy'=>'customer.destroy'];
-        return view('customers.index', compact('customers', 'title', 'meta', 'route'));
+        return view('customers.index', compact('list', 'meta'));
     }
 
     /**
@@ -63,12 +60,13 @@ class CustomerController extends Controller
     public function create()
     {
         return view('customers.create', [
-            'fname'=>null,
-            'mname'=>null,
-            'lname'=>null,
-            'dob'=>'yyyy/MM/dd',
+            'first_name'=>null,
+            'middle_name'=>null,
+            'last_name'=>null,
+            'date_of_birth'=>'yyyy/MM/dd',
             'sex'=>null,
-            'update'=>false
+            'update'=>false,
+            'cpf'=>null
         ]);
     }
 
@@ -80,19 +78,22 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $clientes = session('customers');
-        $count = count($clientes);
-        $newId = $count == 0 ? 1 : end($clientes)->getId() + 1;
-        $newCustomer = new Customer(
-            $newId,
-            $request->fname,
-            $request->mname,
-            $request->lname,
-            DateOnly::buildByString($request->dob),
-            $request->sex
-        );
-        $clientes[] = $newCustomer;
-        session(['customers' => $clientes]);
+        $customer = new Customer();
+        
+        try {
+            $customer->cpf = $request->cpf;
+            $customer->first_name = $request->first_name;
+            $customer->middle_name = $request->middle_name;
+            $customer->last_name = $request->last_name;
+            $customer->sex = $request->sex;
+            $customer->active = true;
+            $customer->date_of_birth = $request->date_of_birth;
+            $customer->save();
+        }
+        catch(\Throwable $e) {
+            return "<h1>Oops... Houve um problema com o cadastro :(<br>Aqui está a mensagem: \"" . $e->getMessage() . "\"</h1>";
+        }
+
         return redirect()->route('customer.index');
     }
 
@@ -123,17 +124,20 @@ class CustomerController extends Controller
     public function edit($id)
     {
         //
-        $customers = session('customers');
-        $index = $this->getIndex($id, $customers);
-        $customer = $customers[$index];
-        return view('customers.edit', [
-            'id'=>$customer->getId(),
-            'fname'=>$customer->getFirstName(),
-            'mname'=>$customer->getMiddleName(),
-            'lname'=>$customer->getLastName(),
-            'dob'=>$customer->getDateOfBirth()->toString("yyyy/MM/dd"),
-            'sex'=>$customer->getSex(),
-            'update'=>true
+        $customer = Customer::find($id);
+
+        $date_parts = explode('-', $customer['date_of_birth']);
+        $date_of_birth = $date_parts[2] . '/' . $date_parts[1] . '/' . $date_parts[0];
+
+        return view('customers.create', [
+            'update'=>true,
+            'id'=>$id,
+            'cpf'=>$customer['cpf'],
+            'first_name'=>$customer['first_name'],
+            'middle_name'=>$customer['middle_name'],
+            'last_name'=>$customer['last_name'],
+            'date_of_birth'=>$date_of_birth,
+            'sex'=>$customer['sex']
         ]);
     }
 
@@ -147,38 +151,22 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $clientes = session('customers');
-        $index = $this->getIndex($id, $clientes);
-        $clientes[$index] = $this->getCustomerByRequest($request, $id);
-        session(['customers'=>$clientes]);
+        $customer = Customer::find($id);
+        try {
+            $customer->cpf = $request->cpf;
+            $customer->first_name = $request->first_name;
+            $customer->middle_name = $request->middle_name;
+            $customer->last_name = $request->last_name;
+            $customer->sex = $request->sex;
+            $customer->active = true;
+            $customer->date_of_birth = $request->date_of_birth;
+            $customer->update();
+        }
+        catch(\Throwable $e) {
+            return "<h1>Oops... Houve um problema com o cadastro :(<br>Aqui está a mensagem: \"" . $e->getMessage() . "\"</h1>";
+        }
         return redirect()->route('customer.index');
     }
-
-    private function getCustomerByRequest(Request $request, $id) {
-        return new Customer(
-            $id,
-            $request->fname,
-            $request->mname,
-            $request->lname,
-            DateOnly::buildByString($request->dob),
-            $request->sex
-        );
-    }
-
-    private function getIndex(int $id, array $customers): ?int {
-        // // array example
-        // $ids = array_column($customers, 'id');
-        // $index = array_search($id, $ids);
-
-        $index = 0;
-        foreach($customers as $c) {
-            if ($c->getId() == $id)
-                return $index;
-            $index++;
-        }
-        return null;
-    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -188,10 +176,12 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         //
-        $customers = session('customers');
-        $index = $this->getIndex($id, $customers);
-        array_splice($customers, $index, 1);
-        session(['customers'=>$customers]);
-        return redirect()->route("customer.index");
+        try {
+            $customer = Customer::find($id);
+            $customer->delete();
+        } catch(\Throwable $e) {
+            return "Error: " . $e->getMessage();
+        }
+        return redirect()->route('customer.index');
     }
 }

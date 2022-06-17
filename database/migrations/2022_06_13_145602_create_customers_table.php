@@ -24,6 +24,7 @@ class CreateCustomersTable extends Migration
             $table->boolean('active')->default(true);
             $table->datetime('inactive_since')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -34,6 +35,9 @@ class CreateCustomersTable extends Migration
      */
     public function down()
     {
+        Schema::table('customers', function(Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
         Schema::dropIfExists('customers');
     }
 }

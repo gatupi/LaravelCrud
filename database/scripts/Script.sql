@@ -37,6 +37,7 @@ insert into product_sales (sale_id, product_id, quantity) values (1, 1, 3);
 
 select * from sales;
 select * from customers;
+delete from customers;
 select * from product_sales;
 
 select
@@ -52,4 +53,59 @@ select
 	inner join product_sales ps on ps.sale_id = s.id
 	inner join products p on ps.product_id = p.id
 	order by customer, sale_id, product;
+
+drop table if exists product_sale;
 	
+select id, first_name + ' ' + last_name from customers;
+
+create function if not exists get_customer_fullname(customer_id INT) returns varchar(102)
+begin
+	declare fname varchar(30);
+	declare mname varchar(40);
+	declare lname varchar(30);
+
+	select first_name, middle_name, last_name
+		into fname, mname, lname
+		from customers where id = customer_id
+		limit 1;
+
+	return concat(fname, if(mname is not null, concat(' ', mname, ' '), ' '), lname);
+end
+
+create function if not exists calculate_age(date_ DATE) returns int
+begin
+	declare today date;
+	declare year_diff int;
+	declare month_diff int; 
+	declare day_diff int;
+
+	set today = now();
+	set year_diff = year(today) - year(date_);
+	set month_diff = month(today) - month(date_);
+	set day_diff = day(today) - day(date_);
+
+	return year_diff - (if(month_diff < 0 or (month_diff = 0 and day_diff< 0), 1, 0));
+end
+
+create function if not exists get_customer_age(customer_id INT) returns int
+begin
+	return calculate_age((select date_of_birth from customers where id = customer_id limit 1));
+end
+
+
+
+drop function if exists get_customer_fullname;
+drop function if exists get_customer_age;
+drop function calculate_age;
+
+select
+	get_customer_fullname(id) as full_name,
+	get_customer_age(id) as age
+	from customers;
+select cast(now() as date);
+
+select year(now()) - year('1997-12-08');
+
+select * from customers;
+delete from customers;
+update customers set deleted_at = null;
