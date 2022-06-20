@@ -1,4 +1,4 @@
-create procedure select_customers(
+create or replace procedure select_customers(
 	name varchar(102),
 	age_min int,
 	age_max int,
