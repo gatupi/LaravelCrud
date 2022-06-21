@@ -109,3 +109,5 @@ select year(now()) - year('1997-12-08');
 select * from customers;
 delete from customers;
 update customers set deleted_at = null;
+
+s

@@ -18,6 +18,7 @@ class CustomerFunctionsMigration extends Migration
         DB::statement(DbContextFileProcessor::create_fn_content('calculate_age'));
         DB::statement(DbContextFileProcessor::create_fn_content('get_customer_age'));
         DB::statement(DbContextFileProcessor::create_fn_content('get_customer_fullname'));
+        DB::statement(DbContextFileProcessor::create_fn_content('hide_cpf'));
     }
 
     /**
@@ -27,6 +28,7 @@ class CustomerFunctionsMigration extends Migration
      */
     public function down()
     {
+        DB::statement(DbContextFileProcessor::drop_fn_content('hide_cpf'));
         DB::statement(DbContextFileProcessor::drop_fn_content('get_customer_fullname'));
         DB::statement(DbContextFileProcessor::drop_fn_content('get_customer_age'));
         DB::statement(DbContextFileProcessor::drop_fn_content('calculate_age'));

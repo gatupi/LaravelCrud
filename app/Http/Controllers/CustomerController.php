@@ -31,15 +31,64 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $list = DB::select('call select_customers(?,?,?,?,?,?,?,?)', [null,null,null,null,null,null,null,null]);
+        /*
+            1: 1-15 ((0*15 + 1)-(1*15))
+            2: 16-30 ((1*15 + 1)-(2*15))
+            3: 31-45 (((n-1)*15 + 1)-(n*15)) ---> ((n-1)*q + 1)-(n*q)
+            4: 46-60 
+        */
+        $q = 15;
+        $page = 3;
+        $begin = ($page - 1)*$q + 1;
+        $end = $page * $q;
+        $name = null;
+
+        $filters = [
+            'name'=>null,
+            'age_min'=>null,
+            'age_max'=>null,
+            'birth_year'=>null,
+            'birth_month'=>null,
+            'birth_day'=>null,
+            'sex'=>null,
+            'active'=>true
+        ];
+
+        $query = DB::table('customers')->select(
+            DB::raw("row_number() over (order by full_name) as row_num"),
+            'id',
+            DB::raw("get_customer_fullname(id) as full_name"),
+            DB::raw("get_customer_age(id) as age"),
+            DB::raw("date_format(date_of_birth, '%d/%m/%Y') as date_of_birth"),
+            DB::raw('hide_cpf(cpf) as cpf'),
+            'sex',
+            'active'
+        )
+        ->whereRaw("
+            deleted_at is null
+            and (? is null or year(date_of_birth) = ?)
+            and (? is null or month(date_of_birth) = ?)
+            and (? is null or day(date_of_birth) = ?)
+            and (? is null or sex = ?)
+            and (? is null or active = ?)
+        ", [$filters['birth_year'], $filters['birth_year'], $filters['birth_month'], $filters['birth_month'],
+            $filters['birth_day'], $filters['birth_day'], $filters['sex'], $filters['sex'],
+            $filters['active'], $filters['active']])
+        ->havingRaw('
+            (? is null or full_name like ?) and (? is null or age >= ?) and (? is null or age <= ?)
+        ', [$filters['name'], $filters['name'], $filters['age_min'], $filters['age_min'],
+            $filters['age_max'], $filters['age_max']]);
+
+        $list = DB::query()->select()->fromSub($query, 'q')->whereRaw("row_num between ? and ?", [$begin, $end])->get()->toArray();
+
         $list = array_map(function($element) {
             return (array)$element;
         }, $list);
         $meta = [
             'columns'=>[
-                'keys'=>['id', 'full_name', 'cpf', 'age', 'date_of_birth', 'sex', 'active'],
-                'pt-br'=>['Id', 'Nome', 'CPF', 'Idade', 'Nascimento', 'Sexo', 'Ativo'],
-                'en-us'=>['Id', 'Name', 'CPF', 'Age', 'Date of birth', 'Sex', 'Active']
+                'keys'=>['row_num', 'id', 'full_name', 'cpf', 'age', 'date_of_birth', 'sex', 'active'],
+                'pt-br'=>['#', 'Id', 'Nome', 'CPF', 'Idade', 'Nascimento', 'Sexo', 'Ativo'],
+                'en-us'=>['#', 'Id', 'Name', 'CPF', 'Age', 'Date of birth', 'Sex', 'Active']
             ],
             'title'=>['pt-br'=>'Clientes', 'en-us'=>'Customers'],
             'routes'=>[

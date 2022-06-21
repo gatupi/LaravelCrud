@@ -1,6 +1,5 @@
-@extends('layouts.main')
+@extends('layouts.main', ['title'=>'Cadastro de cliente', 'create'=>false, 'createRoute'=>null])
 @section('content')
-@section('title', 'Cadastro de cliente')
 <form class="cmsform" action="{{$update ? route('customer.update', $id) : route('customer.store')}}" method="POST">
     @csrf
     @if($update)

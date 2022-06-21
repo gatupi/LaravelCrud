@@ -1,6 +1,6 @@
 
 
-create function mask_cpf(cpf char(11)) returns char(14)
+create function hide_cpf(cpf char(11)) returns char(14)
 begin
 	return concat('***.', substring(cpf, 3, 3), '.***-', substring(cpf, 10));
 end
@@ -92,3 +92,6 @@ select 0.123 > -1;
 desc customers;
 select * from customers;
 update customers set active = false, inactive_since = now() where id > 10;
+
+select *, count(*) from customers order by first_name;
+

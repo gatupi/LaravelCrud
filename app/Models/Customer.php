@@ -13,6 +13,15 @@ class Customer extends Model {
 
     protected $fillable = ['first_name', 'middle_name', 'last_name', 'sex', 'date_of_birth', 'cpf', 'active'];
 
+    /**
+     * @param string
+     * @return string
+     */
+
+    public function getFullNameAttribute($value) {
+        return "$this->first_name $this->last_name";
+    }
+
     public function __set($key, $value) {
         switch($key) {
             case 'cpf':

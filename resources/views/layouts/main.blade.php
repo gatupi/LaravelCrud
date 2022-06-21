@@ -42,7 +42,12 @@
         </nav>
         <main class="cms-content">
             <div class="title-row">
-                <span class="title list-title">@yield('title')</span>
+                <span class="title list-title">{{$title}}</span>
+                @if($create)
+                <a href={{$createRoute}}>
+                    <img class="add-icon" src="{{asset('img/add-icon-6-blue.png')}}" alt="add icon">
+                </a>
+                @endif
             </div>
             @yield('content')
         </main>
