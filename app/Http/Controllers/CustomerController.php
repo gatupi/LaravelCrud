@@ -37,11 +37,6 @@ class CustomerController extends Controller
             3: 31-45 (((n-1)*15 + 1)-(n*15)) ---> ((n-1)*q + 1)-(n*q)
             4: 46-60 
         */
-        $q = 15;
-        $page = 3;
-        $begin = ($page - 1)*$q + 1;
-        $end = $page * $q;
-        $name = null;
 
         $filters = [
             'name'=>null,
@@ -51,7 +46,7 @@ class CustomerController extends Controller
             'birth_month'=>null,
             'birth_day'=>null,
             'sex'=>null,
-            'active'=>true
+            'active'=>null
         ];
 
         $query = DB::table('customers')->select(
@@ -79,7 +74,14 @@ class CustomerController extends Controller
         ', [$filters['name'], $filters['name'], $filters['age_min'], $filters['age_min'],
             $filters['age_max'], $filters['age_max']]);
 
-        $list = DB::query()->select()->fromSub($query, 'q')->whereRaw("row_num between ? and ?", [$begin, $end])->get()->toArray();
+        $count = DB::query()->select(DB::raw('count(*) as total'))->fromSub($query, 'q')->get()->first()->total;
+
+        $perPage = 15;
+        $perPage = $perPage < 15 ? 15 : ($perPage > 20 ? 20 : $perPage);
+        $maxPages = intdiv($count, $perPage) + ($count % $perPage != 0);
+        $page = 1000;
+        $page = $page < 1 ? 1 : ($page > $maxPages ? $maxPages : $page);
+        $list = DB::query()->select()->fromSub($query, 'q')->whereRaw('q.row_num between ? and ?', [($page-1)*$perPage + 1, $page*$perPage])->get()->toArray();
 
         $list = array_map(function($element) {
             return (array)$element;
@@ -98,7 +100,7 @@ class CustomerController extends Controller
             ],
             'lang'=>'pt-br'
         ];
-        return view('customers.index', compact('list', 'meta'));
+        return view('customers.index', compact('list', 'meta', 'maxPages', 'page'));
     }
 
     /**

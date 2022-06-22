@@ -47,3 +47,5 @@
         @endforeach
     </tbody>
 </table>
+@component('components.pagination_footer', compact('formId', 'maxPages', 'page'))
+@endcomponent

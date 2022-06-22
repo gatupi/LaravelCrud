@@ -78,7 +78,3 @@ class PopulateHelper {
         return $customer;
     }
 }
-
-for($i=0; $i<15; $i++) {
-    echo print_r(PopulateHelper::randomCustomer(), true) . "\n";
-}
