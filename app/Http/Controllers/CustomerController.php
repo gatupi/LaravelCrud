@@ -29,7 +29,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         /*
             1: 1-15 ((0*15 + 1)-(1*15))
@@ -38,15 +38,33 @@ class CustomerController extends Controller
             4: 46-60 
         */
 
+        $age_min = null;
+        $age_max = null;
+        switch($request->age_filter_opt) {
+            case 'between':
+                $age_min = $request->age1 ?? null;
+                $age_max = $request->age2 ?? null;
+                break;
+            case 'greater':
+                $age_min = $request->age2 ?? null;
+                break;
+            case 'less':
+                $age_max = $request->age2 ?? null;
+                break;
+            case 'equal':
+                $age_min = $age_max = $request->age2 ?? null;
+                break;
+        }
+
         $filters = [
-            'name'=>null,
-            'age_min'=>null,
-            'age_max'=>null,
-            'birth_year'=>null,
-            'birth_month'=>null,
+            'name'=> (isset($request->name) ? "%$request->name%" : null),
+            'age_min'=> $age_min,
+            'age_max'=> $age_max,
+            'birth_year'=> $request->birth_year ?? null,
+            'birth_month'=> $request->birth_month ?? null,
             'birth_day'=>null,
-            'sex'=>null,
-            'active'=>null
+            'sex'=> (!isset($request->sex) || $request->sex == 'both' ? null : $request->sex),
+            'active'=> (!isset($request->activity) || $request->activity == 'all' ? null : $request->activity)
         ];
 
         $query = DB::table('customers')->select(
@@ -79,7 +97,7 @@ class CustomerController extends Controller
         $perPage = 15;
         $perPage = $perPage < 15 ? 15 : ($perPage > 20 ? 20 : $perPage);
         $maxPages = intdiv($count, $perPage) + ($count % $perPage != 0);
-        $page = 1000;
+        $page = 1;
         $page = $page < 1 ? 1 : ($page > $maxPages ? $maxPages : $page);
         $list = DB::query()->select()->fromSub($query, 'q')->whereRaw('q.row_num between ? and ?', [($page-1)*$perPage + 1, $page*$perPage])->get()->toArray();
 
