@@ -7,6 +7,93 @@ use App\Models\Customer;
 use App\Models\Classes\DateOnly;
 use Illuminate\Support\Facades\DB;
 
+class CustomerListFilter {
+
+    protected const PARAMS = ['name', 'age_min', 'age_max', 'birth_year', 'birth_month', 'birth_day', 'sex', 'active'];
+    private array $data = [];
+
+    public function __construct() {
+        $this->data = array_fill_keys(self::PARAMS, null);
+    }
+
+    public function __set($key, $value) {
+        if (in_array($key, self::PARAMS)) {
+            switch($key){
+                case 'name':
+                    $this->data[$key] = "%$value%";
+                    break;
+                default:
+                $this->data[$key] = $value;
+            }                
+        }
+    }
+
+    public function __get($key) {
+        return in_array($key, self::PARAMS) ? $this->data[$key] : null;
+    }
+
+    public function toArray() {
+        return $this->data;
+    }
+
+    public static function createByRequest(Request $request): CustomerListFilter {
+        $filter = new CustomerListFilter();
+
+        switch($request->age_filter_opt) {
+            case 'between':
+                $filter->age_min = $request->age1 ?? null;
+                $filter->age_max = $request->age2 ?? null;
+                break;
+            case 'greater':
+                $filter->age_min = $request->age2 ?? null;
+                break;
+            case 'less':
+                $filter->age_max = $request->age2 ?? null;
+                break;
+            case 'equal':
+                $filter->age_min = $age_max = $request->age2 ?? null;
+                break;
+        }
+
+        $m = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+        switch($request->birth_filter_opt) {
+            case 'month':
+                $filter->birth_month = array_search($request->birth_month, $m) + 1;
+                break;
+            case 'date':
+                $parts = explode('-', $request->birth_date);
+                $filter->birth_year = (int)$parts[0];
+                $filter->birth_month = (int)$parts[1];
+                $filter->birth_day = (int)$parts[2];
+                break;
+            case 'year':
+                $filter->birth_year = $request->birth_year;
+                break;
+            case 'month-and-year':
+                $filter->birth_month = array_search($request->birth_month, $m) + 1;
+                $filter->birth_year = $request->birth_year;
+                break;
+            case 'birthday':
+                $opt = $request->birthday_option;
+                $filter->birth_month = (int)date('m');
+                if ($opt == 'd')
+                    $filter->birth_day = (int)date('d');
+                break;
+            case 'month-and-day':
+                $filter->birth_month = array_search($request->birth_month, $m) + 1;
+                $filter->birth_day = $request->birth_day;
+                break;
+        }
+
+        $filter->name = $request->name ?? null;
+        $filter->sex = !isset($request->sex) || $request->sex == 'both' ? null : $request->sex;
+        $filter->active = !isset($request->activity) || $request->activity == 'all' ? null : $request->activity;
+
+        return $filter;
+    }
+}
+
 class CustomerController extends Controller
 {
     public function __construct(){
@@ -31,41 +118,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        /*
-            1: 1-15 ((0*15 + 1)-(1*15))
-            2: 16-30 ((1*15 + 1)-(2*15))
-            3: 31-45 (((n-1)*15 + 1)-(n*15)) ---> ((n-1)*q + 1)-(n*q)
-            4: 46-60 
-        */
-
-        $age_min = null;
-        $age_max = null;
-        switch($request->age_filter_opt) {
-            case 'between':
-                $age_min = $request->age1 ?? null;
-                $age_max = $request->age2 ?? null;
-                break;
-            case 'greater':
-                $age_min = $request->age2 ?? null;
-                break;
-            case 'less':
-                $age_max = $request->age2 ?? null;
-                break;
-            case 'equal':
-                $age_min = $age_max = $request->age2 ?? null;
-                break;
-        }
-
-        $filters = [
-            'name'=> (isset($request->name) ? "%$request->name%" : null),
-            'age_min'=> $age_min,
-            'age_max'=> $age_max,
-            'birth_year'=> $request->birth_year ?? null,
-            'birth_month'=> $request->birth_month ?? null,
-            'birth_day'=>null,
-            'sex'=> (!isset($request->sex) || $request->sex == 'both' ? null : $request->sex),
-            'active'=> (!isset($request->activity) || $request->activity == 'all' ? null : $request->activity)
-        ];
+        $filters = CustomerListFilter::createByRequest($request)->toArray();
 
         $query = DB::table('customers')->select(
             DB::raw("row_number() over (order by full_name) as row_num"),
@@ -118,7 +171,7 @@ class CustomerController extends Controller
             ],
             'lang'=>'pt-br'
         ];
-        return view('customers.index', compact('list', 'meta', 'maxPages', 'page'));
+        return view('customers.index', compact('list', 'meta', 'maxPages', 'page', 'filters'));
     }
 
     /**
