@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{asset('css/form.css')}}">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     <link rel="stylesheet" href="{{asset('css/profile.css')}}">
-    
 </head>
 <body>
     <div class="cms-body">
@@ -52,5 +51,6 @@
             @yield('content')
         </main>
     </div>
+    <script src={{asset('js/customer.index.js')}}></script>
 </body>
 </html>

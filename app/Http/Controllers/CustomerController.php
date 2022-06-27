@@ -51,7 +51,7 @@ class CustomerListFilter {
                 $filter->age_max = $request->age2 ?? null;
                 break;
             case 'equal':
-                $filter->age_min = $age_max = $request->age2 ?? null;
+                $filter->age_min = $filter->age_max = $request->age2 ?? null;
                 break;
         }
 
@@ -62,10 +62,12 @@ class CustomerListFilter {
                 $filter->birth_month = array_search($request->birth_month, $m) + 1;
                 break;
             case 'date':
-                $parts = explode('-', $request->birth_date);
-                $filter->birth_year = (int)$parts[0];
-                $filter->birth_month = (int)$parts[1];
-                $filter->birth_day = (int)$parts[2];
+                if (isset($request->birth_date)) {
+                    $parts = explode('-', $request->birth_date);
+                    $filter->birth_year = (int)$parts[0];
+                    $filter->birth_month = (int)$parts[1];
+                    $filter->birth_day = (int)$parts[2];
+                }
                 break;
             case 'year':
                 $filter->birth_year = $request->birth_year;
@@ -171,7 +173,7 @@ class CustomerController extends Controller
             ],
             'lang'=>'pt-br'
         ];
-        return view('customers.index', compact('list', 'meta', 'maxPages', 'page', 'filters'));
+        return view('customers.index', compact('list', 'meta', 'maxPages', 'page', 'request'));
     }
 
     /**
