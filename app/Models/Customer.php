@@ -14,26 +14,86 @@ class Customer extends Model {
     protected $fillable = ['first_name', 'middle_name', 'last_name', 'sex', 'date_of_birth', 'cpf', 'active'];
 
     /**
+     * @return string
+     */
+
+    public function getFullNameAttribute() {
+        return $this->first_name  . (!empty($this->middle_name) ? " $this->middle_name " : " ") . $this->last_name;
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+
+    public function getFirstNameAttribute($value) {
+        return self::ucfirst_name_part($value);
+    }
+
+    /**
+     * @param string
+     * @return ?string
+     */
+
+    public function getMiddleNameAttribute($value) {
+        return !empty($value) ? self::ucfirst_name_part($value) : null;
+    }
+
+    /**
      * @param string
      * @return string
      */
 
-    public function getFullNameAttribute($value) {
-        return "$this->first_name $this->last_name";
+    public function getLastNameAttribute($value) {
+        return self::ucfirst_name_part($value);
     }
 
-    public function __set($key, $value) {
-        switch($key) {
-            case 'cpf':
-                self::validateCpf($value);
-                $this[$key] = $value;
-                break;
-            case 'date_of_birth':
-                $this[$key] = self::adjustDate($value);
-                break;
-            default:
-                $this[$key] = $value;
-        }
+    public static function ucfirst_name_part(string $name_part): string {
+        return strtoupper(substr($name_part, 0, 1)) . strtolower(substr($name_part, 1));
+    }
+
+    /**
+     * @return int
+     */
+
+    public function getAgeAttribute() {
+        $birth = self::get_date_parts($this->date_of_birth);
+        $current = self::get_date_parts(date('Y-m-d'));
+        $year_diff = $current['year'] - $birth['year'];
+        $month_diff = $current['month'] - $birth['month'];
+        $day_diff = $current['day'] - $birth['day'];
+
+        return $year_diff - ($month_diff < 0 || ($month_diff == 0 && $day_diff < 0));
+    }
+
+    public static function get_date_parts(string $dateStr): array { // valid format: Y-m-d, retorna ['year'=>, 'month'=>, 'day'=>]
+        $parts = explode('-', $dateStr);
+        return ['year'=>(int)$parts[0], 'month'=>(int)$parts[1], 'day'=>(int)$parts[2]];
+    }
+
+    /**
+     * @return string
+     */
+
+    public function getHiddenCpfAttribute() {
+        return '***.' . substr($this->cpf, 3, 3) . '.***-' . substr($this->cpf, 9);
+    }
+
+    /**
+     * @return string
+     */
+
+    public function getFormattedCpfAttribute() {
+        return substr($this->cpf, 0, 3) . '.' . substr($this->cpf, 3, 3) . '.' . substr($this->cpf, 6, 3) . '-' . substr($this->cpf, 9);
+    }
+
+    /**
+     * @param string
+     * @return void
+     */
+
+    public function setDateOfBirthAttribute($value) {
+        $this->attributes['date_of_birth'] = self::adjustDate($value);
     }
 
     private static function validateCpf(string $cpf) {
@@ -64,7 +124,7 @@ class Customer extends Model {
         $day = $day < 1 ? 1 : ($day > $m ? $m : $day);
 
         $d = "$year-$month-$day";
-        $today = date('Y-m-d', (new \DateTime())->getTimestamp());
+        $today = date('Y-m-d');
         
         if($d > $today)
             throw new Exception("Error: Date of birth cannot be later than today! Date of birth was $dateStr.");
@@ -72,7 +132,15 @@ class Customer extends Model {
         return $d; // y-m-d
     }
 
-    public function toArray(): array {
-        return (array)$this;
+    public function toListView(): array {
+        return [
+            'full_name'=>$this->full_name,
+            'age'=>$this->age,
+            'date_of_birth'=>$this->date_of_birth,
+            'id'=>$this->id,
+            'cpf'=>$this->cpf,
+            'sex'=>$this->sex,
+            'active'=>$this->active
+        ];
     }
 }

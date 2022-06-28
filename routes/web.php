@@ -90,6 +90,9 @@ Route::get('good-morning', 'MinhaController@goodMorning');
 Route::get('mathop/{n1}/{n2}/{operator}', 'MinhaController@mathOp');
 
 Route::resource('customer', 'CustomerController'); // gera todas as rotas necessárias para os métodos na controller gerados com o parâmetro --resource
+Route::resource('product', 'ProductController');
+Route::resource('brand', 'BrandController');
+Route::resource('product-category', 'ProductCategoryController');
 
 Route::prefix('products')->group(function () {
     Route::get('/', function() {

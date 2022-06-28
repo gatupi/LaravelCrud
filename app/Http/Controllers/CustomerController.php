@@ -154,7 +154,7 @@ class CustomerController extends Controller
         $maxPages = intdiv($count, $perPage) + ($count % $perPage != 0);
         $page = 1;
         $page = $page < 1 ? 1 : ($page > $maxPages ? $maxPages : $page);
-        $list = DB::query()->select()->fromSub($query, 'q')->whereRaw('q.row_num between ? and ?', [($page-1)*$perPage + 1, $page*$perPage])->get()->toArray();
+        $list = DB::query()->select()->fromSub($query, 'q')->whereRaw('q.row_num between ? and ?', [($page-1)*$perPage + 1, $page*$perPage])->get()->all();
 
         $list = array_map(function($element) {
             return (array)$element;

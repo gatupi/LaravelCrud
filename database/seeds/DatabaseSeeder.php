@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Brand;
+use App\Models\ProductCategory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +20,14 @@ class DatabaseSeeder extends Seeder
             $c = PopulateHelper::randomCustomer();
             $c->save();
         }
+        ProductCategory::create(['name'=>'Roupas', 'parent_category'=>null]);
+        ProductCategory::create(['name'=>'Camisetas', 'parent_category'=>ProductCategory::select('id')->where('name', 'Roupas')->get()->first()->id]);
+        ProductCategory::create(['name'=>'Calças', 'parent_category'=>ProductCategory::select('id')->where('name', 'Roupas')->get()->first()->id]);
+        ProductCategory::create(['name'=>'Jeans', 'parent_category'=>ProductCategory::select('id')->where('name', 'Calças')->get()->first()->id]);
+        ProductCategory::create(['name'=>'Jaquetas', 'parent_category'=>ProductCategory::select('id')->where('name', 'Roupas')->get()->first()->id]);
+        ProductCategory::create(['name'=>'Jeans', 'parent_category'=>ProductCategory::select('id')->where('name', 'Jaquetas')->get()->first()->id]);
+        ProductCategory::create(['name'=>'Couro', 'parent_category'=>ProductCategory::select('id')->where('name', 'Jaquetas')->get()->first()->id]);
+        ProductCategory::create(['name'=>'Regatas', 'parent_category'=>ProductCategory::select('id')->where('name', 'Camisetas')->get()->first()->id]);
     }
 }
 
