@@ -49,7 +49,7 @@ class Customer extends Model {
     }
 
     public static function ucfirst_name_part(string $name_part): string {
-        return strtoupper(substr($name_part, 0, 1)) . strtolower(substr($name_part, 1));
+        return mb_strtoupper(substr($name_part, 0, 1)) . mb_strtolower(substr($name_part, 1));
     }
 
     /**
@@ -138,7 +138,7 @@ class Customer extends Model {
             'age'=>$this->age,
             'date_of_birth'=>$this->date_of_birth,
             'id'=>$this->id,
-            'cpf'=>$this->cpf,
+            'cpf'=>$this->formatted_cpf,
             'sex'=>$this->sex,
             'active'=>$this->active
         ];

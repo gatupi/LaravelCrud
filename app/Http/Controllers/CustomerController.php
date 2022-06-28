@@ -122,48 +122,24 @@ class CustomerController extends Controller
     {
         $filters = CustomerListFilter::createByRequest($request)->toArray();
 
-        $query = DB::table('customers')->select(
-            DB::raw("row_number() over (order by full_name) as row_num"),
-            'id',
-            DB::raw("get_customer_fullname(id) as full_name"),
-            DB::raw("get_customer_age(id) as age"),
-            DB::raw("date_format(date_of_birth, '%d/%m/%Y') as date_of_birth"),
-            DB::raw('hide_cpf(cpf) as cpf'),
-            'sex',
-            'active'
-        )
-        ->whereRaw("
-            deleted_at is null
-            and (? is null or year(date_of_birth) = ?)
-            and (? is null or month(date_of_birth) = ?)
-            and (? is null or day(date_of_birth) = ?)
-            and (? is null or sex = ?)
-            and (? is null or active = ?)
-        ", [$filters['birth_year'], $filters['birth_year'], $filters['birth_month'], $filters['birth_month'],
-            $filters['birth_day'], $filters['birth_day'], $filters['sex'], $filters['sex'],
-            $filters['active'], $filters['active']])
-        ->havingRaw('
-            (? is null or full_name like ?) and (? is null or age >= ?) and (? is null or age <= ?)
-        ', [$filters['name'], $filters['name'], $filters['age_min'], $filters['age_min'],
-            $filters['age_max'], $filters['age_max']]);
+        $list = Customer::all()->sortBy(function ($customer) { return $customer->full_name; });
 
-        $count = DB::query()->select(DB::raw('count(*) as total'))->fromSub($query, 'q')->get()->first()->total;
+        $count = count($list);
 
         $perPage = 15;
         $perPage = $perPage < 15 ? 15 : ($perPage > 20 ? 20 : $perPage);
         $maxPages = intdiv($count, $perPage) + ($count % $perPage != 0);
         $page = 1;
         $page = $page < 1 ? 1 : ($page > $maxPages ? $maxPages : $page);
-        $list = DB::query()->select()->fromSub($query, 'q')->whereRaw('q.row_num between ? and ?', [($page-1)*$perPage + 1, $page*$perPage])->get()->all();
 
-        $list = array_map(function($element) {
-            return (array)$element;
-        }, $list);
+        $list = $list->map(function($element) {
+            return $element->toListView();
+        }, $list)->reject(function ($element) { });
         $meta = [
             'columns'=>[
-                'keys'=>['row_num', 'id', 'full_name', 'cpf', 'age', 'date_of_birth', 'sex', 'active'],
-                'pt-br'=>['#', 'Id', 'Nome', 'CPF', 'Idade', 'Nascimento', 'Sexo', 'Ativo'],
-                'en-us'=>['#', 'Id', 'Name', 'CPF', 'Age', 'Date of birth', 'Sex', 'Active']
+                'keys'=>['id', 'full_name', 'cpf', 'age', 'date_of_birth', 'sex', 'active'],
+                'pt-br'=>['Id', 'Nome', 'CPF', 'Idade', 'Nascimento', 'Sexo', 'Ativo'],
+                'en-us'=>['Id', 'Name', 'CPF', 'Age', 'Date of birth', 'Sex', 'Active']
             ],
             'title'=>['pt-br'=>'Clientes', 'en-us'=>'Customers'],
             'routes'=>[
