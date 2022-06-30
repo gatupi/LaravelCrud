@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{asset('css/form.css')}}">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     <link rel="stylesheet" href="{{asset('css/profile.css')}}">
+    <link rel="stylesheet" href="{{asset('css/brand.css')}}">
 </head>
 <body>
     <div class="cms-body">
@@ -36,6 +37,12 @@
                 <div class="menu-option{{request()->routeIs('cities.*') ? ' active' : ''}}">
                     <img src="{{asset('img/city-icon.png')}}" alt="" class="icon">
                     <span class="opt-content">Cidades</span>
+                </div>
+            </a>
+            <a href="{{route('brand.index')}}">
+                <div class="menu-option{{request()->routeIs('brand.*') ? ' active' : ''}}">
+                    <img src="{{asset('img/brand-icon-2-white.png')}}" alt="brand icon" class="icon">
+                    <span class="opt-content">Marcas</span>
                 </div>
             </a>
         </nav>

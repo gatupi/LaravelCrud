@@ -214,4 +214,31 @@ function onChangeBirthSelect(birthSlct) {
     }
 } // fim onChangeBirthSelect
 
+// modal
+
+// Get the <span> element that closes the modal
+var close = document.getElementsByClassName("close")[0];
+var modal = document.getElementById('brandModal');
+
+// When the user clicks on <span> (x), close the modal
+close.onclick = function() {
+    document.getElementById('brandModal').style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+function onClickBrand(brandInfo) {
+    var modal = document.getElementById('brandModal');
+    modal.style.display = 'block';
+    document.getElementById('brandNameValue').innerText = brandInfo.name;
+    document.getElementById('brandIdValue').innerText = brandInfo.id;
+}
+
+// fim modal
+
 fillFilterForm();

@@ -6,8 +6,8 @@
 <table class="list customer-list">
     <thead>
         <tr>
-            @foreach($meta['columns'][$meta['lang']] as $col)
-            <th>{{$col}}</th>
+            @foreach($meta['columns']['keys'] as $col)
+            <th>{{$meta['columns'][$meta['lang']][$loop->index]}}</th>
             @endforeach
             <th colspan="3">Actions</th>
         </tr>

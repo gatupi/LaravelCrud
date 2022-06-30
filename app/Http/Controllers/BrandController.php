@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Brand;
 
 class BrandController extends Controller
 {
@@ -13,7 +14,8 @@ class BrandController extends Controller
      */
     public function index()
     {
-        return view('brands.index');
+        $brands = Brand::all();
+        return view('brands.index', compact('brands'));
     }
 
     /**
@@ -46,6 +48,8 @@ class BrandController extends Controller
     public function show($id)
     {
         //
+        $brand = Brand::find($id);
+        return view('brands.info', compact('brand'));
     }
 
     /**

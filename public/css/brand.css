@@ -1,0 +1,170 @@
+.simple-table {
+    background-color: #f5f5f5;
+    margin: 0 auto 30px;
+    text-align: center;
+    border-radius: 15px;
+    border-collapse: collapse;
+    box-shadow: 0 0 15px #ccc;
+}
+
+.simple-table:hover {
+    cursor: default;
+}
+
+.simple-table th {
+    background-color: lightblue;
+}
+
+.simple-table td,
+.simple-table th {
+    padding: 8px 4px;
+}
+
+.simple-table td {
+    width: calc(100% / 3);
+}
+
+.simple-table th {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+.simple-table td {
+    border-right: 1px solid #ddd;
+}
+
+.simple-table tr td:last-child {
+    border-right: none;
+}
+
+.simple-table td:hover {
+    background-color: #e5e5e5;
+}
+
+.simple-table a {
+    color: black;
+    text-decoration: none;
+}
+
+#brand-info {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f5f5f5;
+    width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    box-shadow: 0 0 12px #bbb;
+    border-radius: 10px;
+}
+
+.brand-attr {
+    font-size: 16pt;
+}
+
+.brand-attr-key {
+    font-weight: bolder;
+}
+
+.brand-icon {
+    height: 2em;
+    margin-left: 10px;
+}
+
+.brand-icon:hover {
+    cursor: pointer;
+}
+
+.brand-icon-box {
+    display: flex;
+    /* background-color: lightblue; */
+    align-items: center;
+}
+
+.simple-table td:hover {
+    cursor: pointer;
+}
+
+/* Modal */
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 600px;
+    border-radius: 10px;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.brand-modal-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.brand-modal-info span {
+    font-size: 14pt;
+}
+
+.modal-icon {
+    height: 1.5em;
+    margin-right: 5px;
+}
+
+.modal-icon:hover {
+    cursor: pointer;
+}
+
+.modal-key-value:first-child{
+    margin: 5px;
+}
+
+.modal-key-value:last-child{
+    margin: 0 5px 5px;
+}

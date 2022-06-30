@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Brand;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,7 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        
-        
+        $this->call(CustomerSeeder::class);
+        $this->call(ProductCategorySeeder::class);
+        Brand::create(['name'=>'Sem-marca']);
+        $this->call(BrFoodBrandSeeder::class);
     }
 }
