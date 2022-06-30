@@ -18,7 +18,7 @@
                     <span class="opt-content">Clientes</span>
                 </div>
             </a>
-            <a href="{{route('products.index')}}">
+            <a href="">
                 <div class="menu-option{{request()->routeIs('products.*') ? ' active' : ''}}">
                     <img class="icon" src="{{asset('img/products-icon-white.png')}}" alt="icon">
                     <span class="opt-content">Produtos</span>
@@ -32,7 +32,7 @@
                 <img class="icon" src="{{asset('img/bills-icon-white.png')}}" alt="icon">
                 <span class="opt-content">Contas</span>
             </div>
-            <a href="{{route('cities.index')}}">
+            <a href="">
                 <div class="menu-option{{request()->routeIs('cities.*') ? ' active' : ''}}">
                     <img src="{{asset('img/city-icon.png')}}" alt="" class="icon">
                     <span class="opt-content">Cidades</span>
