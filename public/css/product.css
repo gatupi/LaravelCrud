@@ -1,0 +1,15 @@
+#productRegisterForm {
+    width: calc(100% - 90px);
+    background-color: rgb(202, 234, 245);
+    margin: 0 auto 30px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.cms-search-icon:hover {
+    cursor: pointer;
+}
+
+.cms-disabled-input {
+    background-color: #f0f0f0;
+}

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     <link rel="stylesheet" href="{{asset('css/profile.css')}}">
     <link rel="stylesheet" href="{{asset('css/brand.css')}}">
+    <link rel="stylesheet" href="{{asset('css/product.css')}}">
 </head>
 <body>
     <div class="cms-body">
@@ -19,8 +20,8 @@
                     <span class="opt-content">Clientes</span>
                 </div>
             </a>
-            <a href="">
-                <div class="menu-option{{request()->routeIs('products.*') ? ' active' : ''}}">
+            <a href="{{route('product.index')}}">
+                <div class="menu-option{{request()->routeIs('product.*') ? ' active' : ''}}">
                     <img class="icon" src="{{asset('img/products-icon-white.png')}}" alt="icon">
                     <span class="opt-content">Produtos</span>
                 </div>

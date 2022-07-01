@@ -36,9 +36,11 @@ class ProductEntitiesMigration extends Migration
             $table->float('margin');
             $table->boolean('applies_margin');
             $table->double('fixed_price');
+            $table->double('calculated_price');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');
             $table->foreign('brand_id')->references('id')->on('brands');
+            $table->foreign('category_id')->references('id')->on('product_categories');
             $table->timestamps();
         });
 
