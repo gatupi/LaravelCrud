@@ -36,18 +36,18 @@
 
     <div style="display:flex; margin-top: 10px;">
         <div class="cms-label-input-box">
-            <input id="productCost" name="cost" type="text" value="R$0,00">
+            <input id="productCost" class="money-br cursor-end" name="cost" type="text" value="R$0,00">
             <label for="productCost">Custo</label>
         </div>
 
         <div class="cms-label-input-box" style="width: 100px; margin-left: 10px;">
-            <input id="productCost" name="cost" type="text" value="0,0%">
-            <label for="productCost">Margem</label>
+            <input id="productMargin" class="percentage cursor-end" name="cost" type="text" value="0,0%">
+            <label for="productMargin">Margem</label>
         </div>
 
         <div class="cms-label-input-box" style="margin-left: 10px;">
-            <input id="productCost" name="cost" type="text" value="R$0,00">
-            <label for="productCost">Preço fixo</label>
+            <input id="productFixedPrice" class="money-br cursor-end" name="cost" type="text" value="R$0,00">
+            <label for="productFixedPrice">Preço fixo</label>
         </div>
 
         <div style="display:flex; flex-direction:column; justify-content:end; margin-left: 10px;">
@@ -62,8 +62,8 @@
         </div>
 
         <div class="cms-label-input-box" style="margin-left: 10px;">
-            <input class="cms-disabled-input" id="productCost" name="cost" type="text" value="R$0,00" disabled>
-            <label for="productCost">Preço final</label>
+            <input style="text-align: right;" class="cms-disabled-input" id="productPrice" name="cost" type="text" value="R$0,00" disabled>
+            <label for="productPrice">Preço final</label>
         </div>
     </div>
 
