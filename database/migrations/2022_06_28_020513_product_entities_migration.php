@@ -23,9 +23,9 @@ class ProductEntitiesMigration extends Migration
         Schema::create('product_categories', function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 60);
-            $table->unsignedBigInteger('parent_category')->nullable();
-            $table->foreign('parent_category')->references('id')->on('product_categories');
-            $table->unique(['name', 'parent_category']);
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('product_categories');
+            $table->unique(['name', 'parent_id']);
             $table->timestamps();
         });
 

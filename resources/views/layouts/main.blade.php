@@ -60,5 +60,6 @@
         </main>
     </div>
     <script src={{asset('js/customer.index.js')}}></script>
+    <script src={{asset('js/ajax.js')}}></script>
 </body>
 </html>

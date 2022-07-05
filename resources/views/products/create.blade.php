@@ -16,7 +16,7 @@
                     <label for="productCategory">Categoria</label>
                 </div>
                 <div style="height: 16pt; padding:2px; margin-left: 5px;">
-                    <img class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon"
+                    <img id="searchCategory" class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon"
                         onclick="{document.getElementById('productCategory').value = 'Camisetas de futebol'}">
                 </div>
             </div>
@@ -67,6 +67,21 @@
         </div>
     </div>
 
+    <div style="margin-top: 10px; display: flex;">
+        <div style="display: flex; align-items: center;">
+            <input style="display: none;" id="uploadProductImg" type="file" accept="image/*" onchange="uploadProductImage()">
+            <label class="upload-file" for="uploadProductImg" style="background: #f5f5f5; padding: 5px; border: 1px solid black; border-radius: 5px;">Carregar imagem</label>
+            <span style="margin-left: 10px;" id="imageName">Nenhuma imagem</span>
+            <img id="deleteImgIcon" class="img-icon" style="height: 1em; margin-left: 10px; display: none;" src="{{asset('img/delete-icon.png')}}" alt="delete icon"
+                onclick="deleteProductImage()">
+            <img id="viewImgIcon" class="img-icon" style="height: 1em; margin-left: 10px; display: none;" src="{{asset('img/view-icon-2.png')}}" alt="view icon"
+                onclick="viewProductImage()">
+        </div>
+    </div>
+
+    <div id="productImageBox" style="display: none; height: 120px; margin-top: 10px;">
+        <img style="height: calc(100% - 2px); border: 1px solid black; border-radius: 10px;" id="productImage" src="#" alt="product image">
+    </div>
 </form>
 
 @endsection

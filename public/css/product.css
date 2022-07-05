@@ -13,3 +13,7 @@
 .cms-disabled-input {
     background-color: #f0f0f0;
 }
+
+.upload-file:hover {
+    cursor: pointer;
+}

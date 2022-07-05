@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Database\DbContextFileProcessor;
+use Illuminate\Support\Facades\DB;
 
 class CustomerFunctionsMigration extends Migration
 {

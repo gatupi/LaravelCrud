@@ -1,5 +1,5 @@
 var obj = {
-    
+
 };
 
 var months = [
@@ -261,7 +261,7 @@ function onClickBrand(brandInfo) {
 // fim modal
 
 var cursorEnd = document.getElementsByClassName('cursor-end');
-for(let c of cursorEnd) {
+for (let c of cursorEnd) {
     c.addEventListener('click', (e) => {
         let valueLength = e.target.value.length;
         e.target.selectionStart = e.target.selectionEnd = valueLength;
@@ -270,7 +270,7 @@ for(let c of cursorEnd) {
 
 var moneyBr = document.getElementsByClassName('money-br');
 
-for(let mbr of moneyBr) {
+for (let mbr of moneyBr) {
 
     if (obj[mbr.id] == undefined)
         obj[mbr.id] = '0';
@@ -289,22 +289,22 @@ for(let mbr of moneyBr) {
             obj[mbr.id] = removeLeftZeros(obj[mbr.id] + info.key);
         } else if (info.key == 'Backspace') {
             let val = obj[mbr.id];
-            obj[mbr.id] = val.substring(0, val.length-1);
+            obj[mbr.id] = val.substring(0, val.length - 1);
             if (obj[mbr.id].length == 0)
                 obj[mbr.id] = '0';
         }
     });
 }
 
-document.getElementById('productCost').addEventListener('input', function() {
+document.getElementById('productCost').addEventListener('input', function () {
     if (getCheckedRadio('applies_margin').checked == 1)
         updateProductPrice();
 });
-document.getElementById('productMargin').addEventListener('input', function() {
+document.getElementById('productMargin').addEventListener('input', function () {
     if (getCheckedRadio('applies_margin').checked == 1)
         updateProductPrice();
 })
-document.getElementById('productFixedPrice').addEventListener('input', function() {
+document.getElementById('productFixedPrice').addEventListener('input', function () {
     if (getCheckedRadio('applies_margin').checked == 0)
         updateProductPrice();
 })
@@ -313,13 +313,13 @@ function formatMoney(cents) {
     if (cents == null || cents == undefined || cents.length == 0)
         return "R$0,00";
     if (cents.length <= 2)
-        return `R$0,${cents.padStart(2,'0')}`;
-    return `R$${cents.substring(0,cents.length-2)},${cents.substring(cents.length-2)}`;
+        return `R$0,${cents.padStart(2, '0')}`;
+    return `R$${cents.substring(0, cents.length - 2)},${cents.substring(cents.length - 2)}`;
 }
 
 function isNumeric(chr) {
     const numeric = '0123456789';
-    for(let n of numeric)
+    for (let n of numeric)
         if (chr == n)
             return true;
     return false;
@@ -328,7 +328,7 @@ function isNumeric(chr) {
 function removeLeftZeros(numericStr) {
     if (numericStr) {
         let index = 0;
-        while(index < numericStr.length && numericStr[index] == '0')
+        while (index < numericStr.length && numericStr[index] == '0')
             index++;
         return index == numericStr.length ? '0' : numericStr.substring(index);
     }
@@ -338,7 +338,7 @@ function removeLeftZeros(numericStr) {
 function getCheckedRadio(name) {
     let radio = document.getElementsByName(name);
     if (radio) {
-        for(let opt of radio)
+        for (let opt of radio)
             if (opt.checked)
                 return { radio: name, checked: opt.value };
     }
@@ -346,8 +346,8 @@ function getCheckedRadio(name) {
 }
 
 var marginOptions = document.getElementsByName('applies_margin');
-for(let opt of marginOptions) {
-    opt.addEventListener('change', function() {
+for (let opt of marginOptions) {
+    opt.addEventListener('change', function () {
         updateProductPrice();
         // console.log(obj);
     });
@@ -359,12 +359,12 @@ function formatPercentage(percentage) {
     if (percentage) {
         if (percentage.length < 2)
             return '0,' + percentage + '%';
-        return `${percentage.substring(0, percentage.length-1)},${percentage.substring(percentage.length-1)}%`;
+        return `${percentage.substring(0, percentage.length - 1)},${percentage.substring(percentage.length - 1)}%`;
     }
 }
 
 var percentage = document.getElementsByClassName('percentage');
-for(let p of percentage) {
+for (let p of percentage) {
     p.style.textAlign = 'right';
     if (!obj[p.id])
         obj[p.id] = '0';
@@ -373,7 +373,7 @@ for(let p of percentage) {
             obj[p.id] = removeLeftZeros(obj[p.id] + e.key);
         } else if (e.key == 'Backspace') {
             let val = obj[p.id];
-            obj[p.id] = val.substring(0, val.length-1);
+            obj[p.id] = val.substring(0, val.length - 1);
             if (obj[p.id].length == 0)
                 obj[p.id] = '0';
         }
@@ -404,6 +404,40 @@ function updateProductPrice() {
             calculatePrice();
         el.value = formatMoney(obj.productPrice);
     }
+}
+
+function viewProductImage() {
+    let img = document.getElementById('productImage');
+    img.onload = () => {
+        URL.revokeObjectURL(img.src);
+    }
+    img.src = URL.createObjectURL(document.getElementById('uploadProductImg').files[0]);
+    let parent = img.parentElement;
+    if (parent.style.display == 'none')
+        parent.style.display = 'block';
+    else
+        parent.style.display = 'none';
+}
+
+function uploadProductImage() {
+    let imgName = document.getElementById('imageName');
+    imgName.innerText = document.getElementById('uploadProductImg').files[0].name;
+    let icons = document.getElementsByClassName('img-icon');
+    for (let i of icons) {
+        if (i.style.display == 'none')
+            i.style.display = 'initial';
+    }
+    document.getElementById('productImageBox').style.display = 'none';
+}
+
+function deleteProductImage() {
+    let productImg = document.getElementById('uploadProductImg');
+    productImg.value = '';
+    let icons = document.getElementsByClassName('img-icon');
+    for (let i of icons)
+        i.style.display = 'none';
+    document.getElementById('imageName').innerText = 'Nenhuma imagem';
+    document.getElementById('productImageBox').style.display = 'none';
 }
 
 //fim margin
