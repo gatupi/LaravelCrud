@@ -17,7 +17,7 @@
                 </div>
                 <div style="height: 16pt; padding:2px; margin-left: 5px;">
                     <img id="searchCategory" class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon"
-                        onclick="{document.getElementById('productCategory').value = 'Camisetas de futebol'}">
+                        onclick="{openModal(document.getElementById('categoryModal'))}">
                 </div>
             </div>
     
@@ -28,7 +28,7 @@
                 </div>
                 <div style="height: 16pt; padding:2px; margin-left: 5px;">
                     <img class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon"
-                        onclick="{document.getElementById('productBrand').value = 'Nike Corinthians'}">
+                        onclick="{openModal(document.getElementById('brandModal'))}">
                 </div>
             </div>
         </div>
@@ -83,5 +83,15 @@
         <img style="height: calc(100% - 2px); border: 1px solid black; border-radius: 10px;" id="productImage" src="#" alt="product image">
     </div>
 </form>
+
+<!-- Select category modal -->
+@component('components.modal', ['modalId'=>'categoryModal', 'modalTitle'=>'Categorias'])
+    
+@endcomponent
+
+<!-- Select brand modal -->
+@component('components.modal', ['modalId'=>'brandModal', 'modalTitle'=>'Marcas'])
+    
+@endcomponent
 
 @endsection

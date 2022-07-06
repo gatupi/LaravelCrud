@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{asset('css/profile.css')}}">
     <link rel="stylesheet" href="{{asset('css/brand.css')}}">
     <link rel="stylesheet" href="{{asset('css/product.css')}}">
+    <link rel="stylesheet" href="{{asset('css/modal.css')}}">
 </head>
 <body>
     <div class="cms-body">
@@ -61,5 +62,8 @@
     </div>
     <script src={{asset('js/customer.index.js')}}></script>
     <script src={{asset('js/ajax.js')}}></script>
+    <script src={{asset('js/modal.js')}}></script>
+    <script src={{asset('js/onLoad.js')}}></script>
+    <script src={{asset('js/product.create.js')}}></script>
 </body>
 </html>

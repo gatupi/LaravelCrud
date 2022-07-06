@@ -1,0 +1,95 @@
+.cms-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1;
+}
+
+.cms-modal-box {
+    display: flex;
+    flex-direction: column;
+    width: 760px;
+    height: 380px;
+    padding: 10px 20px;
+    background-color: rgba(240,240,240,0.85);
+    margin: 50px auto;
+    border-radius: 10px;
+}
+
+.cms-modal-box-header {
+    background-color: rgba(255, 160, 35, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.cms-modal-box-title {
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+.cms-modal-close {
+    font-size: 2em;
+}
+
+.cms-closed-modal {
+    display: none;
+}
+
+/* end modal styles */
+
+ul,
+.categoryTree {
+    list-style-type: none;
+}
+
+.categoryTree {
+    margin: 0;
+    padding: 10px 20px;
+    display: inline-block;
+}
+
+/* Style the caret/arrow */
+.has-children {
+    cursor: pointer;
+    user-select: none;
+    /* Prevent text selection */
+}
+
+.tree-arrow {
+    visibility: hidden;
+}
+
+.tree-arrow.visible {
+    visibility: visible;
+}
+
+.tree-arrow-down.visible {
+    display: inline-block;
+    transform: rotate(90deg);
+}
+
+.category-name {
+    margin-left: 5px;
+}
+
+.categoryTree ul {
+    display: none;
+}
+
+ul.active {
+    display: block;
+}
+
+.close-modal {
+    cursor: pointer;
+}
+
+.cat-selected {
+    color: rgb(29, 146, 107);
+}
