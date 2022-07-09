@@ -4,7 +4,6 @@ function addEventListenersToModals() {
         let closeButton = m.querySelector('.cms-modal-close');
         closeButton.addEventListener('click', function () {
             m.classList.toggle('cms-closed-modal');
-            m.dataset.open = false;
             removeModalContent(m);
         });
     }
@@ -27,10 +26,4 @@ function createModalContent() {
 function openModal(modal) {
     modal.classList.toggle('cms-closed-modal');
     modal.querySelector('.cms-modal-box').append(createModalContent());
-    modal.dataset.open = true;
-}
-
-function appendContentToModal(modal, content) {
-    if (modal.dataset.open)
-        modal.querySelector('.cms-modal-content').append(content);
 }

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{asset('css/brand.css')}}">
     <link rel="stylesheet" href="{{asset('css/product.css')}}">
     <link rel="stylesheet" href="{{asset('css/modal.css')}}">
+    <link rel="stylesheet" href="{{asset('css/tree.css')}}">
 </head>
 <body>
     <div class="cms-body">

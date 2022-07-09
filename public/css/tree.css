@@ -1,0 +1,43 @@
+/* tree styles */
+
+.cms-tree {
+    padding: 0;
+    margin: 0;
+    /* background-color: rgb(106, 170, 192); */
+}
+
+.cms-tree * {
+    list-style-type: none;
+}
+
+.has-children {
+    cursor: pointer;
+    user-select: none;
+}
+
+.tree-title {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.tree-arrow {
+    display: inline-block;
+    visibility: hidden;
+}
+
+.has-children > .tree-arrow {
+    visibility: visible;
+}
+
+.tree-arrow-down {
+    display: inline-block;
+    transform: rotate(90deg);
+}
+
+.tree-node-hidden {
+    display: none;
+}
+
+.cms-tree-element-selected {
+    color: rgb(29, 146, 107);
+}

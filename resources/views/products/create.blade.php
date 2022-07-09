@@ -16,8 +16,7 @@
                     <label for="productCategory">Categoria</label>
                 </div>
                 <div style="height: 16pt; padding:2px; margin-left: 5px;">
-                    <img id="searchCategory" class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon"
-                        onclick="{openModal(document.getElementById('categoryModal'))}">
+                    <img id="searchCategory" class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon">
                 </div>
             </div>
     
@@ -27,8 +26,7 @@
                     <label for="productCategory">Marca</label>
                 </div>
                 <div style="height: 16pt; padding:2px; margin-left: 5px;">
-                    <img class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon"
-                        onclick="{openModal(document.getElementById('brandModal'))}">
+                    <img id="searchBrand" class="cms-search-icon" style="height: 100%;" src="{{asset('img/search-icon.png')}}" alt="search-icon">
                 </div>
             </div>
         </div>
